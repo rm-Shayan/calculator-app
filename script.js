@@ -1,51 +1,85 @@
-var history = "";
+document.addEventListener("DOMContentLoaded", () => {
+    const calContainer = document.getElementById("cal-container");
+    const display = document.getElementById("display");
+    const historyPanel = document.getElementById("historyPanel");
+    const historyDiv = document.getElementById("history");
+    const toggleHistory = document.getElementById("toggleHistory");
+  
+    let expression = "";
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+  
+    // Show/Hide History Panel
+    toggleHistory.addEventListener("click", () => {
+      historyPanel.classList.toggle("hidden");
+      showHistory();
+    });
+  
+    // Show history from localStorage
+    const showHistory = () => {
+      if (!history.length) {
+        historyDiv.innerHTML = "<p class='text-gray-400'>No history found</p>";
+      } else {
+        historyDiv.innerHTML = history.map(item => `<div>${item}</div> <hr>`).join() ;
+      }
+    };
+  
+    // Update and save history
+    const updateHistory = (exp, result) => {
+      const record = `${new Date()} ${exp} = ${result}`;
+      history.unshift(record);
+      if (history.length > 10) history.pop(); // Limit to 10 items
+      localStorage.setItem("history", JSON.stringify(history));
+    };
+  
+    // Prevent double operators
+    const isOperator = (char) => ["+", "-", "*", "/", "×", "÷"].includes(char);
+  
+    // Button click logic
+    calContainer.addEventListener("click", (e) => {
+      const btn = e.target;
+      if (!btn.matches("button")) return;
+      const value = btn.value;
+  
+      switch (value) {
+        case "C":
+          expression = "";
+          display.value = "";
+          break;
+        case "DEL":
+          expression = expression.slice(0, -1);
+          display.value = expression;
+          break;
+        case "=":
+          try {
+            const result = eval(expression);
+            updateHistory(expression, result);
+            display.value = result;
+            expression = result.toString();
+          } catch {
+            display.value = "Error";
+            expression = "";
+          }
+          break;
+        default:
+        
 
-function saveData() {
-    var data = event.target.innerText;
-    var input = document.getElementById("input");
+        const lastChar = expression.slice(-1);
 
-    if (data == "=") {
-       
-        input.value = eval(input.value);
-        history = input.value;
-    } else if (data == "+/-") {
-        if (!isNaN(input.value)) {
-            if (input.value.startsWith("-")) {
-                input.value = input.value.slice(1);
-            } else {
-                input.value = "-" + input.value;
-            }
-        } else {
-            input.value = "Invalid input";
+        // Prevent starting with an operator OR repeating operators
+        if (isOperator(value)) {
+          if (expression === "" || isOperator(lastChar)) {
+            return; // Don't allow operator at start or double operators
+          }
         }
-    } else if (data == "C" || data == "CE") {
-        input.value = "";
-        history = input.value;
-    } else if (data == "DEl") {
-        input.value = input.value.slice(0, -1);
-        history = input.value;
-    } else if (data == "+" || data == "-" || data == "*" || data == "/") {
-        if ((data == input.value.slice(-1)) || ((input.value.slice(-1) == "+" || input.value.slice(-1) == "-" || input.value.slice(-1) == "*" || input.value.slice(-1) == "/") && (data == "+" || data == "-" || data == "*" || data == "/"))) {
-            input.value = input.value.slice(0, -1) + data;
-            history = input.value;
-        } else {
-            input.value += data;
-            history = input.value;
-        }
-    } else if (data == "%") {
-        input.value = (input.value / 100) * 1;
-        history = input.value;
-    } else if (data == "1/x") {
-        input.value = 1 / input.value;
-        history = input.value;
-    } else if (data == "x²") {
-        input.value = Math.pow(input.value, 2);
-        history = input.value;
-    } else if (data == "x³") {
-        input.value = Math.pow(input.value, 3);
-        history = input.value;
-    } else {
-        input.value += data;
-        history = input.value;
-    }
-}
+        
+        expression += value;
+        display.value = expression;
+      }
+    });
+  
+    // Initial display of history if already saved
+    showHistory();
+  });
+  
+  
+  

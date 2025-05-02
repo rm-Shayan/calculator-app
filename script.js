@@ -82,4 +82,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
   
-  
+ let coounter=(start=0,end=10,step=1)=>{
+if(start<emd){
+
+}
+
+ }
+
+
+//  function counter(count = 0, end = 10) {
+//   if (count <= end) {
+//     console.log(count);
+//     setTimeout(() => counter(count + 1, end), 500); // Pass the updated count
+//   }
+// }
+
+// counter();
+
+// function* increment(count = 0) {
+//   while (count < 10) {
+//     yield count;
+//     count++;
+//   }
+// }
+// const gen = increment();
+// console.log(gen.next().value); // 0
+// console.log(gen.next().value); // 1
+// console.log(gen.next().value); // 2
+// // ... up to 9

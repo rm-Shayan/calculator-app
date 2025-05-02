@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SVG Animation with GSAP</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    svg {
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>GSAP Animated SVG</h1>
+
+  <svg width="300" height="200">
+    <!-- Circle -->
+    <circle id="myCircle" cx="50" cy="50" r="30" fill="skyblue" stroke="black" stroke-width="2" />
+
+    <!-- Rectangle -->
+    <rect id="myRect" x="100" y="30" width="80" height="50" fill="orange" stroke="black" stroke-width="2" />
+
+    <!-- Line -->
+    <line id="myLine" x1="200" y1="20" x2="280" y2="80" stroke="green" stroke-width="2" />
+
+    <!-- Text -->
+    <text id="myText" x="40" y="150" font-size="16" fill="black">Simple SVG Example</text>
+  </svg>
+
+  <script>
+    // Animate circle: grow and bounce in
+    gsap.from("#myCircle", {
+      duration: 1,
+      scale: 0,
+      transformOrigin: "center center",
+      ease: "bounce.out"
+    });
+
+    // Animate rectangle: slide in from left
+    gsap.from("#myRect", {
+      duration: 1,
+      x: -100,
+      opacity: 0,
+      delay: 0.5,
+      ease: "power2.out"
+    });
+
+    // Animate line: draw from start to end
+    gsap.from("#myLine", {
+      duration: 1,
+      drawSVG: "0% 0%", // requires DrawSVGPlugin, so instead we simulate with scaleX
+      scaleX: 0,
+      transformOrigin: "left center",
+      delay: 1,
+      ease: "power2.out"
+    });
+
+    // Animate text: fade in
+    gsap.from("#myText", {
+      duration: 1,
+      opacity: 0,
+      y: 20,
+      delay: 1.5,
+      ease: "power1.out"
+    });
+    function* getTmdbEndpoints() {
+  // Base URL
+  const BASE_URL = 'https://api.themoviedb.org/3';
+
+  // Movie-related endpoints
+  yield `${BASE_URL}/movie/popular`;
+  yield `${BASE_URL}/movie/top_rated`;
+  yield `${BASE_URL}/movie/upcoming`;
+  yield `${BASE_URL}/movie/latest`;
+  yield `${BASE_URL}/movie/{movie_id}`;
+
+  // TV Show-related endpoints
+  yield `${BASE_URL}/tv/popular`;
+  yield `${BASE_URL}/tv/top_rated`;
+  yield `${BASE_URL}/tv/on_the_air`;
+  yield `${BASE_URL}/tv/latest`;
+  yield `${BASE_URL}/tv/{tv_id}`;
+
+  // Search-related endpoints
+  yield `${BASE_URL}/search/movie`;
+  yield `${BASE_URL}/search/tv`;
+  yield `${BASE_URL}/search/person`;
+
+  // Person-related endpoints
+  yield `${BASE_URL}/person/{person_id}`;
+  yield `${BASE_URL}/person/{person_id}/movie_credits`;
+  yield `${BASE_URL}/person/{person_id}/tv_credits`;
+
+  // Genre-related endpoints
+  yield `${BASE_URL}/genre/movie/list`;
+  yield `${BASE_URL}/genre/tv/list`;
+
+  // Collection-related endpoints
+  yield `${BASE_URL}/collection/{collection_id}`;
+
+  // Authentication-related endpoints
+  yield `${BASE_URL}/authentication/token/new`;
+  yield `${BASE_URL}/authentication/token/validate_with_login`;
+
+  // Account-related endpoints
+  yield `${BASE_URL}/account`;
+
+  // Configuration-related endpoints
+  yield `${BASE_URL}/configuration`;
+
+  // Trending-related endpoints
+  yield `${BASE_URL}/trending/all/day`;
+  yield `${BASE_URL}/trending/all/week`;
+
+  // Watchlist-related endpoints
+  yield `${BASE_URL}/account/{account_id}/watchlist/movie`;
+  yield `${BASE_URL}/account/{account_id}/watchlist/tv`;
+
+  // Rating-related endpoints
+  yield `${BASE_URL}/movie/{movie_id}/rating`;
+  yield `${BASE_URL}/tv/{tv_id}/rating`;
+}
+
+const tmdbEndpoints = getTmdbEndpoints();
+for (let endpoint of tmdbEndpoints) {
+  console.log(endpoint);
+}
+
+  </script>
+
+</body>
+</html>
